@@ -1,7 +1,7 @@
 import connection from "../database/database.js";
 
-const postUrl = (url, short) => {
-    return connection.query('INSERT INTO urls (url, "shortenUrl") VALUES($1,$2)',[url, short]);
+const postUrl = (url, short, userId ) => {
+    return connection.query('INSERT INTO urls (url, "shortenUrl", "userId") VALUES($1,$2, $3)',[url, short, userId]);
 }
 
 const getOneUrl = (id) => {
@@ -16,9 +16,14 @@ const updateVisits = (id, visits) => {
     return connection.query('UPDATE urls SET visits = $1 WHERE id = $2', [visits + 1, id])
 }
 
+const deleteUserUrl = (id) => {
+    return connection.query('DELETE FROM urls WHERE id = $1', [id])
+}
+
 export const urlRepository = {
     postUrl,
     getOneUrl,
     getByShort,
-    updateVisits
+    updateVisits,
+    deleteUserUrl
 }
