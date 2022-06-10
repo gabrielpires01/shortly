@@ -37,4 +37,20 @@ const getOneUrl = async (req,res) => {
     }
 };
 
-export { postShortenUrl, getOneUrl }
+const getByShortUrl = async (req,res) => {
+    const { shortUrl } = req.params;
+
+    try {
+        const {rows: urls} = await urlRepository.getByShort(shortUrl);
+        if(!urls[0]) return res.sendStatus(404)
+
+        await urlRepository.updateVisits(urls[0].id, urls[0].visits)
+
+        return res.redirect(urls[0].url);
+    } catch(err) {
+        console.error(err)
+        return res.sendStatus(500)
+    }
+}
+
+export { postShortenUrl, getOneUrl, getByShortUrl }
