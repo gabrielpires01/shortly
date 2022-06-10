@@ -71,4 +71,14 @@ const deleteUserUrl = async (req,res) => {
     }
 };
 
-export { postShortenUrl, getOneUrl, getByShortUrl, deleteUserUrl }
+const getRankings = async (req,res) => {
+    try {
+        const {rows: ranking} = await urlRepository.getRankings();
+        return res.send(ranking)
+    } catch(err) {
+        console.error(err)
+        return res.sendStatus(500)
+    }
+};
+
+export { postShortenUrl, getOneUrl, getByShortUrl, deleteUserUrl, getRankings }

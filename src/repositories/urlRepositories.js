@@ -20,10 +20,30 @@ const deleteUserUrl = (id) => {
     return connection.query('DELETE FROM urls WHERE id = $1', [id])
 }
 
+const getVisitsNumber = (id) => {
+    return connection.query('SELECT SUM(visits) AS visits FROM urls WHERE "userId" = $1 GROUP BY "userId"', [id])
+}
+
+const getUserUrls = (id) => {
+    return connection.query('SELECT * FROM urls WHERE "userId" = $1', [id])
+}
+
+const getRankings = () => {
+    return connection.query(`
+        SELECT u.id,u.name, COUNT(l.id) AS "linkCount", SUM(l.visits) AS "visitCount" FROM urls l
+        JOIN users u ON l."userId" = u.id
+        GROUP BY u.id
+        ORDER BY "visitCount" DESC
+        LIMIT 10`)
+}
+
 export const urlRepository = {
     postUrl,
     getOneUrl,
     getByShort,
     updateVisits,
-    deleteUserUrl
+    deleteUserUrl,
+    getVisitsNumber,
+    getUserUrls,
+    getRankings
 }
