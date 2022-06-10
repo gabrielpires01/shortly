@@ -15,6 +15,26 @@ const postShortenUrl = async (req,res) => {
         console.error(err)
         return res.sendStatus(500)
     }
-}
+};
 
-export { postShortenUrl }
+const getOneUrl = async (req,res) => {
+    const { id } = req.params;
+
+    try {
+        const {rows: urls} = await urlRepository.getOneUrl(id)
+        if(!urls[0]) return res.sendStatus(404)
+
+        const response = {
+            id: urls[0].id,
+            shortUrl: urls[0].shortenUrl,
+            url: urls[0].url
+        };
+
+        return res.send(response)
+    } catch (err) {
+        console.error(err)
+        return res.sendStatus(500)
+    }
+};
+
+export { postShortenUrl, getOneUrl }
